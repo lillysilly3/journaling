@@ -1,1 +1,1 @@
-# journaling
+# journal
