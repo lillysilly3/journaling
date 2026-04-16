@@ -1,10 +1,11 @@
 import customtkinter as ctk
-from database import set_password, save_setting
+from database import DatabaseClient
 
 class SetupScreen(ctk.CTkFrame):
-    def __init__(self, parent, on_setup_complete):
+    def __init__(self, parent, on_setup_complete, db: DatabaseClient):
         super().__init__(parent)
         self.on_setup_complete = on_setup_complete
+        self.db = db
 
         #Setup title
         label = ctk.CTkLabel(self, text="Welcome to your Journal!\nCreate your password", font=ctk.CTkFont(size=18, weight="bold"))
@@ -45,12 +46,12 @@ class SetupScreen(ctk.CTkFrame):
                 return
             
             #Password set
-            set_password(password_entry)
+            self.db.set_password(password_entry)
             
             #Hint set
             hint = self.hint_entry.get()
             if hint != "":
-                save_setting("hint", hint)
+                self.db.save_setting("hint", hint)
             
             self.on_setup_complete()
         else:

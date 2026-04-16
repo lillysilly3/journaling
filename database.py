@@ -4,74 +4,54 @@ import os
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "journal.db")
 
-def initialize_db():
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    cur.execute("CREATE TABLE IF NOT EXISTS settings (key TEXT, value TEXT)")
-    conn.commit()
-    conn.close()
+class DatabaseClient():
+    def __init__(self):
+        self.conn = sqlite3.connect(DB_PATH)
+        self.cur = self.conn.cursor()
+        self.cur.execute("CREATE TABLE IF NOT EXISTS settings (key TEXT, value TEXT)")
+        self.conn.commit()        
 
-def set_password(password):
-    hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    cur.execute("INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)", ("password", hashed))
-    conn.commit()
-    conn.close()
+    def set_password(self, password):
+        hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+        self.cur.execute("INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)", ("password", hashed))
+        self.conn.commit()
 
-def check_password(password):
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    cur.execute("SELECT value FROM settings WHERE key = ?", ("password",))
-    result = cur.fetchone()
-    
-    if result is None:
-        conn.close()
-        return False
-    elif bcrypt.checkpw(password.encode(), result[0].encode()):
-        conn.close()
-        return True
-    else:
-        conn.close()
-        return False
-    
-def has_password():
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    cur.execute("SELECT value FROM settings WHERE key = ?", ("password",))
-    result = cur.fetchone()
-    
-    if result is None:
-        conn.close()
-        return False
-    else:
-        conn.close()
-        return True
-    
-def save_setting(key, value):
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    cur.execute("INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)", (key, value))
-    conn.commit()
-    conn.close()
+    def check_password(self, password):
+        self.cur.execute("SELECT value FROM settings WHERE key = ?", ("password",))
+        result = self.cur.fetchone()
+        
+        if result is None:
+            return False
+        elif bcrypt.checkpw(password.encode(), result[0].encode()):
+            return True
+        else:
+            return False
+        
+    def has_password(self):
+        self.cur.execute("SELECT value FROM settings WHERE key = ?", ("password",))
+        result = self.cur.fetchone()
+        
+        if result is None:
+            return False
+        else:
+            return True
+        
+    def save_setting(self, key, value):
+        self.cur.execute("INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)", (key, value))
+        self.conn.commit()
 
-def get_setting(key):
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    cur.execute("SELECT value FROM settings WHERE key = ?", (key,))
-    result= cur.fetchone()
-    if result is None:
-        conn.close()
-        return None
-    else:
-        conn.close()
-        return result[0]
-    
-def reset_db():
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    cur.execute("DELETE FROM settings")
-    conn.commit()
-    conn.close()
+    def get_setting(self, key):
+        self.cur.execute("SELECT value FROM settings WHERE key = ?", (key,))
+        result= self.cur.fetchone()
+        if result is None:
+            return None
+        else:
+            return result[0]
+        
+    def reset(self):
+        self.cur.execute("DELETE FROM settings")
+        self.conn.commit()
 
+    def close(self):
+        self.conn.close()
     
