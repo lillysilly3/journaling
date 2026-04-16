@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from database import check_password as db_check_password
 
 class LoginScreen(ctk.CTkFrame):
     def __init__(self, parent, on_login_success):
@@ -24,8 +25,8 @@ class LoginScreen(ctk.CTkFrame):
         self.error_label.pack()
 
     def check_password(self):
-        password=self.password_entry.get()
-        if password == "test123":
+        password = self.password_entry.get()
+        if db_check_password(password):
             self.on_login_success()
         else:
             self.error_label.configure(text="Wrong password!")

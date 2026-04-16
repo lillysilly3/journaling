@@ -1,8 +1,12 @@
 import customtkinter as ctk
 from login import LoginScreen
+from database import initialize_db
+
 
 def on_login_success():
     print("Logged in!")
+
+initialize_db()
 
 app = ctk.CTk()
 app.title("My Journal")
