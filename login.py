@@ -10,7 +10,7 @@ class LoginScreen(ctk.CTkFrame):
         self.db = db
 
         #Title
-        label = ctk.CTkLabel(self, text="My Journal", text_color=COLORS["text"], font=ctk.CTkFont(size=24, weight="bold"))
+        label = ctk.CTkLabel(self, text="My Journal", text_color=COLORS["label"], font=ctk.CTkFont(size=24, weight="bold"))
         label.pack(pady=30)
 
         #Password

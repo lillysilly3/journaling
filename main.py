@@ -41,7 +41,7 @@ def on_closing():
 app = ctk.CTk()
 app.title("My Journal")
 app.geometry("500x500")
-ctk.set_appearance_mode("light")
+ctk.set_appearance_mode("system")
 
 #Initialising database
 db = DatabaseClient()

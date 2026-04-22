@@ -3,11 +3,12 @@ import datetime
 import calendar
 from database import DatabaseClient
 from moods import MOOD_COLORS
+from theme import COLORS
 
 
 class CalendarWidget(ctk.CTkFrame):
     def __init__(self, parent, db: DatabaseClient, on_day_select):
-        super().__init__(parent)
+        super().__init__(parent, fg_color=COLORS["frame"])
         self.db = db
         self.on_day_select = on_day_select
         self.current_year = datetime.date.today().year
@@ -30,14 +31,14 @@ class CalendarWidget(ctk.CTkFrame):
         #Navigation for calendar
         nav_frame = ctk.CTkFrame(self)
         nav_frame.grid(row=0, column=0, columnspan=7, pady=5)
-        ctk.CTkButton(nav_frame, text="<", width=30, command=self.prev_month).pack(side="left", padx=5)
-        ctk.CTkLabel(nav_frame, text=f"{calendar.month_name[self.current_month]} {self.current_year}", font=ctk.CTkFont(weight="bold")).pack(side="left", padx=10)
-        ctk.CTkButton(nav_frame, text=">", width=30, command=self.next_month).pack(side="left", padx=5)
+        ctk.CTkButton(nav_frame, text="<", fg_color=COLORS["accent"], hover_color=COLORS["button_hover"], text_color="white", width=30, command=self.prev_month).pack(side="left")
+        ctk.CTkLabel(nav_frame, text=f"{calendar.month_name[self.current_month]} {self.current_year}", text_color=COLORS["label"], font=ctk.CTkFont(weight="bold")).pack(side="left", pady=5)
+        ctk.CTkButton(nav_frame, text=">", fg_color=COLORS["accent"], hover_color=COLORS["button_hover"], text_color="white", width=30, command=self.next_month).pack(side="left")
 
         #Days in the calendar
         days = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]
         for i, day in enumerate(days):
-            ctk.CTkLabel(self, text=day, width=30).grid(row=1, column=i, padx=2)
+            ctk.CTkLabel(self, text=day, text_color=COLORS["text"], width=30).grid(row=1, column=i, padx=2)
         
         cal = calendar.monthcalendar(self.current_year, self.current_month)
         today_date = datetime.date.today()
@@ -47,7 +48,7 @@ class CalendarWidget(ctk.CTkFrame):
         for week_num, week in enumerate(cal):
             for day_num, day in enumerate(week):
                 if day == 0:
-                    ctk.CTkLabel(self, text="", width=30).grid(row=week_num+2, column=day_num, padx=1, pady=1)
+                    ctk.CTkLabel(self, text="", text_color=COLORS["text"], width=30).grid(row=week_num+2, column=day_num, padx=1, pady=1)
                 else:
                     date_str = f"{self.current_year}-{self.current_month:02d}-{day:02d}"
                     entry_data = month_entries.get(date_str)
@@ -55,13 +56,13 @@ class CalendarWidget(ctk.CTkFrame):
                     color = MOOD_COLORS.get(mood, "transparent") if mood else "transparent"
                     is_selected = date_str == self.selected_date
                     if day == today:
-                        ctk.CTkButton(self, text=str(day), width=20, height=20, fg_color=color, corner_radius=20,
-                        border_width=2, border_color="#755CE4", 
+                        ctk.CTkButton(self, text=str(day), text_color=COLORS["text"], width=20, height=20, fg_color=color, corner_radius=20,
+                        border_width=2, border_color=COLORS["accent"], 
                         command=lambda d=date_str: self.on_day_select(d)).grid(row=week_num+2, column=day_num, padx=1, pady=1)
                     else:
                         border = 2 if (entry_data and not mood) or is_selected else 0
                         border_color = "white" if is_selected else None
-                        ctk.CTkButton(self, text=str(day), width=20, height=20, fg_color=color, border_width=border, 
+                        ctk.CTkButton(self, text=str(day), text_color=COLORS["text"], width=20, height=20, fg_color=color, border_width=border, 
                         border_color=border_color,
                         command=lambda d=date_str: self.on_day_select(d)).grid(row=week_num+2, column=day_num, padx=1, pady=1)          
                     

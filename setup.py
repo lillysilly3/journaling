@@ -24,7 +24,7 @@ class SetupScreen(ctk.CTkFrame):
         self.password_entry.bind("<space>", lambda event: self.save_password())
 
         #Hint
-        self.hint_entry = ctk.CTkEntry(self, placeholder_text="Enter a password hint (optional)", width=200)
+        self.hint_entry = ctk.CTkEntry(self, placeholder_text="Enter a password hint (optional)", fg_color=COLORS["frame"], text_color=COLORS["text"], width=200)
         self.hint_entry.pack(pady=10)
 
         self.error_label = ctk.CTkLabel(self, text="", text_color="red")

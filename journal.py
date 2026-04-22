@@ -2,10 +2,11 @@ import customtkinter as ctk
 import datetime
 from database import DatabaseClient
 from calendar_widget import CalendarWidget
-from moods import MOODS
+from moods import MOODS, MOOD_COLORS
+from theme import COLORS
 
 class JournalScreen(ctk.CTkFrame):
-    def __init__(self, parent, db: DatabaseClient):
+    def __init__(self, parent, db: DatabaseClient, fg_color=COLORS["frame"]):
         super().__init__(parent)
         self.db = db
         self.current_mood = ""
@@ -18,17 +19,17 @@ class JournalScreen(ctk.CTkFrame):
         self.grid_rowconfigure(1, weight=1)
 
         #Frames
-        self.top_frame = ctk.CTkFrame(self)
+        self.top_frame = ctk.CTkFrame(self, fg_color=COLORS["bg"])
         self.top_frame.grid(row=0, columnspan=2, sticky="ew", padx=5, pady=5)
 
-        self.left_frame = ctk.CTkFrame(self)
+        self.left_frame = ctk.CTkFrame(self, fg_color=COLORS["bg"],)
         self.left_frame.grid(row=1, column=0, sticky="ns", padx=5, pady=5)
 
-        self.right_frame = ctk.CTkFrame(self)
+        self.right_frame = ctk.CTkFrame(self, fg_color=COLORS["bg"],)
         self.right_frame.grid(row=1, column=1, sticky="nsew", padx=5, pady=5)
 
         #Top button
-        ctk.CTkButton(self.top_frame, text="💾", command=self.save_entry).pack(side="left", padx=10, pady=10)
+        ctk.CTkButton(self.top_frame, text="💾", corner_radius=200, width=0, height=0, fg_color=COLORS["accent"], hover_color=COLORS["button_hover"], text_color="white", command=self.save_entry).pack(side="left", padx=10, pady=10)
 
         #Right frame grid
         self.right_frame.grid_columnconfigure(0, weight=1)
@@ -37,12 +38,12 @@ class JournalScreen(ctk.CTkFrame):
 
         #Date label
         today = datetime.date.today().strftime("%Y %B %d")
-        self.date_label = ctk.CTkLabel(self.right_frame, text=today, font=ctk.CTkFont(size=18, weight="bold"))
+        self.date_label = ctk.CTkLabel(self.right_frame, text=today, text_color=COLORS["label"], font=ctk.CTkFont(size=18, weight="bold"))
         self.date_label. grid(row=0, column=0, sticky="w", padx=10, pady=10)
         
 
         #Textbox
-        self.entry_textbox = ctk.CTkTextbox(self.right_frame, width=200)
+        self.entry_textbox = ctk.CTkTextbox(self.right_frame, fg_color=COLORS["entry"], text_color=COLORS["text"], width=200)
         self.entry_textbox.grid(row=1, column=0, sticky="nsew", padx=10, pady=10)
 
         #Entry
@@ -61,10 +62,10 @@ class JournalScreen(ctk.CTkFrame):
         #Mood tracker
         self.mood_frame = ctk.CTkFrame(self.left_frame)
         self.mood_frame.grid(row=1, column=0, padx=5, pady=5)
-        ctk.CTkLabel(self.mood_frame, text="How do you feel today?", font=ctk.CTkFont(weight="bold")).pack(pady=5)
+        ctk.CTkLabel(self.mood_frame, text="How do you feel today?", text_color=COLORS["label"], font=ctk.CTkFont(weight="bold")).pack(pady=5)
 
         for mood, color in MOODS:
-            ctk.CTkButton(self.mood_frame, text=mood, fg_color=color, width=160, command=lambda m=mood: self.set_mood(m)).pack(pady=2)
+            ctk.CTkButton(self.mood_frame, text=mood, text_color=COLORS["text"], fg_color=color, width=160, command=lambda m=mood: self.set_mood(m)).pack(pady=2)
 
     def save_entry(self):
         date = self.current_date
