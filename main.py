@@ -3,6 +3,7 @@ from login import LoginScreen
 from database import DatabaseClient
 from setup import SetupScreen
 from journal import JournalScreen
+from theme import COLORS
 
 def on_login_success():
     print("logged in!")
@@ -40,8 +41,7 @@ def on_closing():
 app = ctk.CTk()
 app.title("My Journal")
 app.geometry("500x500")
-ctk.set_appearance_mode("system")
-ctk.set_default_color_theme("green")
+ctk.set_appearance_mode("light")
 
 #Initialising database
 db = DatabaseClient()
@@ -58,7 +58,5 @@ else:
     setup_screen.pack(expand=True, fill="both")
     
 app.mainloop()
-
-# TODO: themes
 
 

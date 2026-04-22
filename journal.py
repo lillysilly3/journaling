@@ -27,9 +27,8 @@ class JournalScreen(ctk.CTkFrame):
         self.right_frame = ctk.CTkFrame(self)
         self.right_frame.grid(row=1, column=1, sticky="nsew", padx=5, pady=5)
 
-        #Top buttons
-        ctk.CTkButton(self.top_frame, text="Themes", command=self.open_themes).pack(side="left", padx=10, pady=10)
-        ctk.CTkButton(self.top_frame, text="Save", command=self.save_entry).pack(side="left", padx=10, pady=10)
+        #Top button
+        ctk.CTkButton(self.top_frame, text="💾", command=self.save_entry).pack(side="left", padx=10, pady=10)
 
         #Right frame grid
         self.right_frame.grid_columnconfigure(0, weight=1)
@@ -66,10 +65,6 @@ class JournalScreen(ctk.CTkFrame):
 
         for mood, color in MOODS:
             ctk.CTkButton(self.mood_frame, text=mood, fg_color=color, width=160, command=lambda m=mood: self.set_mood(m)).pack(pady=2)
-
-
-    def open_themes(self):
-        print("Themes clicked!")
 
     def save_entry(self):
         date = self.current_date

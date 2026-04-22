@@ -1,23 +1,24 @@
 import customtkinter as ctk
 from database import DatabaseClient
+from theme import COLORS
 
 class LoginScreen(ctk.CTkFrame):
     def __init__(self, parent, on_login_success, on_reset, db: DatabaseClient):
-        super().__init__(parent)
+        super().__init__(parent, fg_color=COLORS["bg"])
         self.on_login_success = on_login_success
         self.on_reset = on_reset
         self.db = db
 
         #Title
-        label = ctk.CTkLabel(self, text="My Journal", font=ctk.CTkFont(size=24, weight="bold"))
+        label = ctk.CTkLabel(self, text="My Journal", text_color=COLORS["text"], font=ctk.CTkFont(size=24, weight="bold"))
         label.pack(pady=30)
 
         #Password
-        self.password_entry = ctk.CTkEntry(self, placeholder_text="Enter password", show="*", width=200)
+        self.password_entry = ctk.CTkEntry(self, placeholder_text="Enter password", fg_color=COLORS["frame"], text_color=COLORS["text"], show="*", width=200)
         self.password_entry.pack(pady=10)
 
         #Login button
-        button = ctk.CTkButton(self, text="Login", command=self.check_password)
+        button = ctk.CTkButton(self, text="Login", fg_color=COLORS["accent"], hover_color=COLORS["button_hover"], text_color="white", command=self.check_password)
         button.pack(pady=10)
         self.password_entry.bind("<Return>", lambda event: self.check_password())
         self.password_entry.bind("<space>", lambda event: self.check_password())
@@ -27,7 +28,7 @@ class LoginScreen(ctk.CTkFrame):
         ctk.CTkCheckBox(self, text="Show password", variable=self.show_password_var, command=self.toggle_password).pack(pady=5)
 
         #Hint button
-        hint_button = ctk.CTkButton(self, text="Forgot password?", command=self.show_hint)
+        hint_button = ctk.CTkButton(self, text="Forgot password?", width=120, height=25, fg_color="transparent", hover_color=COLORS["button_hover"], text_color="white", command=self.show_hint)
         hint = self.db.get_setting("hint")
         if hint:
             hint_button.pack(pady=5)

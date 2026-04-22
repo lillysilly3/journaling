@@ -1,23 +1,24 @@
 import customtkinter as ctk
 from database import DatabaseClient
+from theme import COLORS
 
 class SetupScreen(ctk.CTkFrame):
     def __init__(self, parent, on_setup_complete, db: DatabaseClient):
-        super().__init__(parent)
+        super().__init__(parent, fg_color=COLORS["bg"])
         self.on_setup_complete = on_setup_complete
         self.db = db
 
         #Setup title
-        label = ctk.CTkLabel(self, text="Welcome to your Journal!\nCreate your password", font=ctk.CTkFont(size=18, weight="bold"))
+        label = ctk.CTkLabel(self, text="Welcome to your Journal!\nCreate your password", text_color=COLORS["text"], font=ctk.CTkFont(size=18, weight="bold"))
         label.pack(pady=30)
 
-        self.password_entry = ctk.CTkEntry(self, placeholder_text="Enter password", show="", width=200)
+        self.password_entry = ctk.CTkEntry(self, fg_color=COLORS["frame"], text_color=COLORS["text"], placeholder_text="Enter password", show="", width=200)
         self.password_entry.pack(pady=10)
 
-        self.confirm_entry = ctk.CTkEntry(self, placeholder_text="Confirm password", show="", width=200)
+        self.confirm_entry = ctk.CTkEntry(self, fg_color=COLORS["frame"], text_color=COLORS["text"], placeholder_text="Confirm password", show="", width=200)
         self.confirm_entry.pack(pady=10)
 
-        button = ctk.CTkButton(self, text="Create password", command=self.save_password)
+        button = ctk.CTkButton(self, fg_color=COLORS["accent"], hover_color=COLORS["button_hover"], text_color="white", text="Create password", command=self.save_password)
         button.pack(pady=10)
         self.password_entry.bind("<Return>", lambda event: self.save_password())
         self.password_entry.bind("<space>", lambda event: self.save_password())

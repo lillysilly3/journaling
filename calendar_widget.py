@@ -13,6 +13,7 @@ class CalendarWidget(ctk.CTkFrame):
         self.current_year = datetime.date.today().year
         self.current_month = datetime.date.today().month
         self.month_cache = {}
+        self.selected_date = datetime.date.today().strftime("%Y-%m-%d")
         self.build_calendar()        
 
     
@@ -41,8 +42,8 @@ class CalendarWidget(ctk.CTkFrame):
         cal = calendar.monthcalendar(self.current_year, self.current_month)
         today_date = datetime.date.today()
         today = today_date.day if (self.current_year == today_date.year and self.current_month == today_date.month) else -1
-
         
+        #Making buttons
         for week_num, week in enumerate(cal):
             for day_num, day in enumerate(week):
                 if day == 0:
@@ -52,13 +53,16 @@ class CalendarWidget(ctk.CTkFrame):
                     entry_data = month_entries.get(date_str)
                     mood = entry_data[1] if entry_data else None
                     color = MOOD_COLORS.get(mood, "transparent") if mood else "transparent"
+                    is_selected = date_str == self.selected_date
                     if day == today:
                         ctk.CTkButton(self, text=str(day), width=20, height=20, fg_color=color, corner_radius=20,
                         border_width=2, border_color="#755CE4", 
                         command=lambda d=date_str: self.on_day_select(d)).grid(row=week_num+2, column=day_num, padx=1, pady=1)
                     else:
-                        border = 2 if (entry_data and not mood) else 0
+                        border = 2 if (entry_data and not mood) or is_selected else 0
+                        border_color = "white" if is_selected else None
                         ctk.CTkButton(self, text=str(day), width=20, height=20, fg_color=color, border_width=border, 
+                        border_color=border_color,
                         command=lambda d=date_str: self.on_day_select(d)).grid(row=week_num+2, column=day_num, padx=1, pady=1)          
                     
     def prev_month(self):
