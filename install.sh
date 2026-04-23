@@ -4,7 +4,7 @@ echo "Installing Journal App..."
 
 # Copy executable to local bin
 mkdir -p ~/.local/bin
-cp Journal ~/.local/bin/Journal
+cp dist/Journal ~/.local/bin/Journal
 chmod +x ~/.local/bin/Journal
 
 # Create desktop entry
